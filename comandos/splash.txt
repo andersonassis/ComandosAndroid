@@ -1,0 +1,76 @@
+public class SplashActivity extends Activity {
+    GPSTracker         gpsSplash;
+    double             latitudeSplash  = 0;
+    double             longitudeSplash = 0;
+    private static int TEMPO_SPLASH = 50000;
+    private static int TEMPO_SPLASH2 = 200;
+    ProgressDialog      pd;
+    private AlertDialog alerta;
+    ProgressBar progress;
+    TextView    texto;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        
+      //  new MinhaTask(this,progress,texto).execute();
+      //  pd = new ProgressDialog(this);
+     //   pd =  ProgressDialog.show(SplashActivity.this,"Aguarde...","Pesquisando GPS",true,true);
+      //  pd.setCancelable(false);
+
+      //  pd =  ProgressDialog.show(SplashActivity.this,"Aguarde...","Pesquisando GPS",true,true);
+
+        gpsSplash = new GPSTracker(SplashActivity.this);
+        if (gpsSplash.canGetLocation()) {
+            latitudeSplash = gpsSplash.getLatitude();
+            longitudeSplash = gpsSplash.getLongitude();
+          //  ToastManager.show(SplashActivity.this, "Localização OK " + latitudeSplash + " " + longitudeSplash, ToastManager.INFORMATION);
+        } else {
+            gpsSplash.alertaGpsDesligado();
+        }
+
+        if (latitudeSplash == 0.0) {
+
+            while (latitudeSplash == 0.0) {
+                gpsSplash = new GPSTracker(SplashActivity.this);
+                latitudeSplash = gpsSplash.getLatitude();
+            }
+        }else {
+          //  pd.dismiss();
+            fim();
+        }
+
+        fim();
+
+    }//fim do oncreate
+
+
+
+    public void fim() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(i);
+                // Fecha a activity atual
+                finish();
+            }
+        }, TEMPO_SPLASH2);
+    }
+
+   /* public void alerta(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Aviso");
+        builder.setMessage("Este aplicativo necessita de GPS ativo,por favor verifique");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+    }*/
+
+
+}
+
